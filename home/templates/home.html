@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+  {% comment %} <h1 style="color: blue;">Welcome to Home page!! </h1>
+  <h2>Here are some links:</h2>
+
+  <p>{{name}}, {{age}}</p>
+
+  {{ name | length }}
+
+  {% for fruit in fruits %}
+
+    {% if fruit == "apple" %}
+        found apple
+    {% else %}   
+       <p>{{ fruit }}</p>
+    {% endif %}
+
+
+  {% endfor %}
+
+  <br>
+  <br>
+
+  {% if data.age >= 18 %}
+    <p>{{ data.name }} are eligible to vote</p>
+  {% elif data.age < 18 %}
+    <p>{{ data.name }} are not eligible to vote because under  18</p>
+  {% else %}
+    <p>you are not eligible to vote</p>
+  {% endif %}
+
+    <ul>
+        <li><a href="/about">About</a></li>
+        <li style="color: green;"><a href="/contact/">Contact</a></li>
+        <li><a href="/services">Services</a></li> 
+        csrf token help in validating that the request was send by user... 
+    </ul> {% endcomment %}
+
+  <form method="post">
+    {% csrf_token %} 
+    {{ form.as_p }}
+    <button type="submit" value="Submit">Submit</button>
+  </form>
+
+{% endblock %}
