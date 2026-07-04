@@ -1,7 +1,8 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from home.forms import StudentForm, StudentModelForm
-from home.models import Studenttable,Student
+from home.models import Studenttable,Student  
+from django.db.models import Q
 #context = {
   #   # "form": StudentForm()
   #   "form": StudentModelForm()
@@ -68,4 +69,34 @@ def DynamicResponse(request,number):  #the number is variable taken from url pat
 def thankyou(request):
 
   return render(request,"thank.html") 
-# render function send the request obj to django in whic req obj contains the string of html  which is sent as messg to browser and reqeust nee
+# render function send the request obj to django then which is sent as messg to browser
+
+def search(request):
+  students = Student.objects.all()
+  
+  search = request.GET.get('search')
+  age = request.GET.get('age')
+  print(search)
+  if search:
+    students = students.filter(
+    Q(name__icontains=search)|
+    Q(college__college_name__icontains=search)|
+    Q(email__endswith = search )|
+    Q(gender__icontains = search)
+    ) 
+
+  if age:
+    if age == "1":
+      students = students.filter( age__gte = 18 , age__lte = 21 ).order_by("age")
+    if age == "2":
+      students = students.filter( age__gte = 21 , age__lte = 23).order_by("age")
+    if age == "3":
+      students = students.filter( age__gte = 23 , age__lte = 25).order_by("age")
+
+  context = {
+    "students":students,
+    "search":search
+  }
+
+  return render(request, "search.html",context)
+
